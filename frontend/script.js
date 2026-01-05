@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000';
+const API_URL = 'https://patrimoniosemed.paiva.api.br';
 let TOKEN = localStorage.getItem('token');
 
 // Forçar maiúsculas sem acentos APENAS em campos de texto
