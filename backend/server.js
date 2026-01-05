@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 const cors = require('cors');
 const db = require('./db');
 const { verificarToken } = require('./auth/auth.middleware');
@@ -15,12 +14,7 @@ const cadastrosRoutes = require('./routes/cadastros.routes');
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
-// Rota para entregar o index.html quando acessar o endereço principal
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
-});
 // Middlewares e Rotas Principais
 app.use('/auth', authRoutes);
 app.use('/catalogo', catalogoRoutes);
@@ -180,6 +174,6 @@ app.get('/api/alertas/logistica/coleta', verificarToken, async (req, res) => {
 });
 
 const PORT = 3000;
-app.listen(PORT,'0.0.0.0', () => {
-    console.log(`Servidor rodando em https://patrimoniosemed.paiva.api.br/auth/login:${PORT}`);
+app.listen(PORT, () => {
+    console.log(`Servidor rodando em https://patrimoniosemed.paiva.api.br:${PORT}`);
 });
