@@ -181,5 +181,5 @@ app.get('/api/alertas/logistica/coleta', verificarToken, async (req, res) => {
 
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
+    console.log(`Servidor rodando em https://patrimoniosemed.paiva.api.br:${PORT}`);
 });
