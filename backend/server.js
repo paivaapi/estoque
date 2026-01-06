@@ -33,6 +33,10 @@ app.use((req, res, next) => {
 // Como o server.js está em /backend, precisamos usar '..' para subir um nível e achar /frontend
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
+app.get('/teste', (req, res) => {
+  res.send("O roteamento do Express está funcionando!");
+});
+
 // --- ROTAS DA API ---
 app.use('/auth', authRoutes);
 app.use('/catalogo', catalogoRoutes);
@@ -49,7 +53,6 @@ app.get('*', (req, res) => {
 // ============================================================
 // NOVAS ROTAS PARA SOLICITAÇÃO DE UNIFORMES (PERFIL ESCOLA)
 // ============================================================
-// Rota para entrada de estoque por tamanho (Exclusivo Uniformes)
 // Rota para entrada de estoque por tamanho (Exclusivo Uniformes)
 app.post('/estoque/entrada-uniforme', verificarToken, async (req, res) => {
     const { produto_id, grade } = req.body; // grade: [{tamanho: 'M', qtd: 50}, ...]
@@ -201,4 +204,5 @@ app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
     console.log(`Local do Frontend: ${path.join(__dirname, '..', 'frontend')}`);
 });
+
 
