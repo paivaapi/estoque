@@ -18,9 +18,14 @@ app.use(cors());
 app.use(express.json());
 
 // --- CONFIGURAÇÃO DE SEGURANÇA (CSP) ---
-// Isso ajuda a evitar o erro que você viu no console
+// COPIE E COLE ESTE BLOCO:
 app.use((req, res, next) => {
-    res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline';");
+    res.setHeader("Content-Security-Policy", 
+        "default-src 'self'; " +
+        "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; " +
+        "style-src 'self' 'unsafe-inline'; " +
+        "connect-src 'self' https://patrimoniosemed.paiva.api.br https://cloudflareinsights.com;"
+    );
     next();
 });
 
@@ -196,3 +201,4 @@ app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
     console.log(`Local do Frontend: ${path.join(__dirname, '..', 'frontend')}`);
 });
+
