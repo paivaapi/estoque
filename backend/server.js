@@ -1,9 +1,9 @@
 const express = require('express');
 const cors = require('cors');
-const db = require('./db');
-const { verificarToken } = require('./auth/auth.middleware');
+const path = require('path');
+require('dotenv').config();
 
-// Importação das rotas externas
+// Importação das rotas (Caminhos ajustados para sua estrutura)
 const authRoutes = require('./auth/auth.routes');
 const catalogoRoutes = require('./routes/catalogo.routes');
 const pedidosRoutes = require('./routes/pedidos.routes');
@@ -12,10 +12,23 @@ const historicoRoutes = require('./routes/historico.routes');
 const cadastrosRoutes = require('./routes/cadastros.routes');
 
 const app = express();
+
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Middlewares e Rotas Principais
+// --- CONFIGURAÇÃO DE SEGURANÇA (CSP) ---
+// Isso ajuda a evitar o erro que você viu no console
+app.use((req, res, next) => {
+    res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline';");
+    next();
+});
+
+// --- SERVIR ARQUIVOS ESTÁTICOS DO FRONTEND ---
+// Como o server.js está em /backend, precisamos usar '..' para subir um nível e achar /frontend
+app.use(express.static(path.join(__dirname, '..', 'frontend')));
+
+// --- ROTAS DA API ---
 app.use('/auth', authRoutes);
 app.use('/catalogo', catalogoRoutes);
 app.use('/pedidos', pedidosRoutes);
@@ -23,6 +36,11 @@ app.use('/estoque', estoqueRoutes);
 app.use('/historico', historicoRoutes);
 app.use('/api/cadastros', cadastrosRoutes);
 
+// --- ROTA RAIZ (ENTREGA O SITE) ---
+// Qualquer rota que não seja da API, entrega o index.html
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
+});
 // ============================================================
 // NOVAS ROTAS PARA SOLICITAÇÃO DE UNIFORMES (PERFIL ESCOLA)
 // ============================================================
@@ -173,7 +191,8 @@ app.get('/api/alertas/logistica/coleta', verificarToken, async (req, res) => {
     } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em https://patrimoniosemed.paiva.api.br:${PORT}`);
+    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`Local do Frontend: ${path.join(__dirname, '..', 'frontend')}`);
 });
